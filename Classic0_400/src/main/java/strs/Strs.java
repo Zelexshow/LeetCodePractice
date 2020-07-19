@@ -488,32 +488,101 @@ public class Strs {
         return (A+A).contains(B);
     }
 
+
+    /***
+     * 中等--394、字符串解码
+     */
+    public String decodeString(String s){
+        String res="";
+        //记录'['之前的数字
+        Stack<Integer> countStack = new Stack<>();
+        //记录'['之前的运算结果
+        Stack<String> resStack = new Stack<>();
+        int ix=0;
+        int curNum=0;
+        while (ix < s.length()){
+            char ch = s.charAt(ix);
+            if (Character.isDigit(ch)){
+                while (Character.isDigit(s.charAt(ix)))
+                    curNum=10*curNum+(s.charAt(ix++)-'0');
+            }else if (ch == '['){
+                resStack.push(res);
+                res="";//注意置空
+                countStack.push(curNum);
+                curNum=0;
+                ix++;
+            }else if (ch == ']'){
+
+                StringBuilder tmp = new StringBuilder(resStack.pop());
+                int repeatTimes=countStack.pop();
+                for (int i=0;i<repeatTimes;i++){
+                    tmp.append(res);
+                }
+
+                res=tmp.toString();
+                ix++;
+
+            }else{//就是字母
+                res+=s.charAt(ix++);
+            }
+        }
+        return res;
+    }
+
+    //二刷
+    public String decodeString1_2(String s){
+        String res="";
+        int curNum=0;
+        Stack<Integer> int_Stacks = new Stack<>();
+        Stack<String> strs_Stacks = new Stack<>();
+        int ix=0;
+        while(ix < s.length()){
+            char c = s.charAt(ix);
+
+            if (Character.isDigit(c)){
+
+                while(Character.isDigit(s.charAt(ix)))
+                    curNum=curNum*10+(s.charAt(ix++)-'0');
+
+            }else if (c == '['){
+                int_Stacks.push(curNum);
+                curNum=0;
+                strs_Stacks.push(res);
+                res="";
+                ix++;
+
+            }else if (c == ']'){
+
+                StringBuilder tmp = new StringBuilder(strs_Stacks.pop());
+                int times = int_Stacks.pop();
+
+                for (int i=0;i<times;i++){
+                    tmp.append(res);
+                }
+                res=tmp.toString();
+                ix++;
+
+            }else{//字母情况
+                res+=s.charAt(ix++);
+            }
+        }
+        return res;
+    }
+
     public static void main(String[] args) {
-        /*String s="abcabcbb";
-        Strs ins = new Strs();
-        int len = ins.lengthOfLongestSubstring(s);
-        System.out.println(len);
 
-
-        String s1="abcdefg";
-        String s2 = ins.LeftRotateString(s1, 4);
-        String s3 = ins.RightRotateString(s1, 4);
-        System.out.println(s2);
-        System.out.println(s3);
-
-        String sente="This is an apple.";
-        String s4 = ins.reverseWords(sente);
-        System.out.println(s4);*/
-        /*String a="1010";
-        String b="1011";*/
         Strs strs = new Strs();
-        String S="ADOBECODEBANC";
+        String test="2[abc]3[cd]ef";
+        String ss = strs.decodeString(test);
+        System.out.println(ss);
+
+        /*String S="ADOBECODEBANC";
         String T="ABC";
         String result = strs.minWindow(S, T);
         System.out.println(result);
 
         String s="abcdefg";
         String s1 = strs.LeftRotateString(s, 3);
-        System.out.println(s1);
+        System.out.println(s1);*/
     }
 }

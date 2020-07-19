@@ -121,6 +121,29 @@ public class DP {
         return dp[len-1][amount];
 
     }
+    //二刷
+    public int change1_2(int amount,int[] coins){
+        int len=coins.length;
+        if (len == 0){
+            if (amount == 0){
+                return 1;
+            }
+            return 0;
+        }
+        int[][] dp=new int[len][amount+1];
+        dp[0][0]=1;
+        //填充第一行
+        for (int i=coins[0];i<=amount;i+=coins[0]) dp[0][i]=1;
+        for (int i=1;i<len;i++){
+            for (int j=0;j<=amount;j++){
+                for (int k=0;j-k*coins[i]>=0;k++){
+                    dp[i][j]+=dp[i-1][j-k*coins[i]];
+                }
+            }
+        }
+        return dp[len-1][amount];
+
+    }
     /***
      * 中等--62、不同的路径
      */
@@ -788,6 +811,19 @@ public class DP {
         return maxprofit;
     }
 
+    //二刷
+    public int maxProfit1_2(int[] prices){
+        if (prices == null || prices.length == 0) return 0;
+        int least=Integer.MAX_VALUE,maxProfit=0;
+        for (int i=0;i<prices.length;i++){
+            if (least > prices[i]) least=prices[i];//更新波谷
+            else{
+                maxProfit=Math.max(maxProfit,prices[i]-least);
+            }
+        }
+        return maxProfit;
+    }
+
     /***
      * 中等--122、买卖股票2：不限次数
      */
@@ -804,6 +840,7 @@ public class DP {
         }
         return dp[len-1][0];//持有现金肯定利润最大
     }
+
     /***
      * 困难--123、买卖股票3：只限2次交易
      //dp[i][k][j]:表示现在是第i天，至多还可以进行k次交易，状态是（持有股票或者没持有股票）
@@ -912,6 +949,7 @@ public class DP {
         }
         return dp[n-1][0];
     }
+
 
     /***
      * 简单--303、区间和建索

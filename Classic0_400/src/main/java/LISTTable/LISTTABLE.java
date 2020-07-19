@@ -1,6 +1,8 @@
 package LISTTable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /***
  * 链表系列
@@ -11,6 +13,18 @@ public class LISTTABLE {
         int val;
       ListNode next;
       public ListNode(int x) { val = x; }
+    }
+
+    public static class Node {
+        int val;
+        Node next;
+        Node random;
+
+        public Node(int val) {
+            this.val = val;
+            this.next = null;
+            this.random = null;
+        }
     }
     /**
      * 简单--83. 删除排序链表中的重复元素
@@ -453,6 +467,36 @@ public class LISTTABLE {
         }
         return dummy.next;
     }
+    //两数相加
+    public ListNode addTwoNumbers1_2(ListNode l1,ListNode l2){
+        ListNode tmp = new ListNode(-1);
+        ListNode head=tmp;
+        int count=0;
+        while(l1 != null && l2 != null){
+            count=(l1.val+l2.val+count)/10;
+            int curSum=(l1.val+l2.val+count)%10;
+            head.next=new ListNode(curSum);
+            l1=l1.next;
+            l2=l2.next;
+        }
+        while(l1 != null){
+            head.next=new ListNode((l1.val+count)%10);
+            head=head.next;
+            count=(l1.val+count)/10;
+            l1=l1.next;
+        }
+        while (l2 != null){
+            head.next=new ListNode((l2.val+count)%10);
+            head=head.next;
+            count=(l2.val+count)/10;
+            l2=l2.next;
+        }
+        if (count == 1){
+            head.next=new ListNode(1);
+            head=head.next;
+        }
+        return tmp.next;
+    }
 
     /***
      * 简单--234、回文链表
@@ -492,6 +536,34 @@ public class LISTTABLE {
         }
         return result;
     }
+
+    /***
+     * 中等--138、复制带随机指针的链表
+     */
+    public Node copyRandomList(Node head){
+        if (head == null) return head;
+        Map<Node, Node> map = new HashMap<>();
+        Node copyHead = new Node(head.val);
+        map.put(head,copyHead);
+        Node cur = head;
+        Node copyCur=copyHead;
+        while(cur.next != null){
+            copyCur.next=new Node(cur.next.val);//复制下一个节点
+            cur=cur.next;
+            copyCur=copyCur.next;
+            map.put(cur,copyCur);
+        }
+        //压入随机节点
+        cur=head;
+        copyCur=copyHead;
+        while(cur != null){
+            copyCur.random=map.get(cur.random);
+            cur=cur.next;
+            copyCur=copyCur.next;
+        }
+        return copyHead;
+    }
+
     public static void main(String[] args) {
         LISTTABLE ins = new LISTTABLE();
         ListNode head = new ListNode(0);

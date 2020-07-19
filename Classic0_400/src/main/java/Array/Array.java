@@ -1150,6 +1150,38 @@ public class Array {
     /***
      *
      */
+    List<List<Integer>> result=null;
+    public List<List<Integer>> printList(int n){
+         result= new ArrayList<>();
+        if (n == 0) return result;
+        if (n == 1){
+            List<Integer> cur = new ArrayList<>();
+            cur.add(1);
+            result.add(cur);
+            return result;
+        }
+        helper(n,new ArrayList<Integer>());
+        return result;
+    }
+    public void helper(int target,List<Integer> cur){
+        if (target == 0){
+            result.add(new ArrayList<>(cur));
+            return;
+        }
+        if (target < 0) return;
+
+        if (target>=2){
+            cur.add(2);//加入到结果中
+            helper(target-2,cur);
+            cur.remove(cur.size()-1);//回溯
+        }
+        if (target >= 1){
+            cur.add(1);
+            helper(target-1,cur);
+            cur.remove(cur.size()-1);
+        }
+
+    }
 
     public static void main(String[] args) {
         Array ins = new Array();
@@ -1158,5 +1190,8 @@ public class Array {
         int[] arr={1,2,3,5,4,6,6,8,7};
         ins.nextPermutation(arr);
         System.out.println(Arrays.toString(arr));
+
+        List<List<Integer>> lists = ins.printList(2);
+        System.out.println(lists);
     }
 }

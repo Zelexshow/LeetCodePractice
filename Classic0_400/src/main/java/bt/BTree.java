@@ -8,6 +8,7 @@ import java.util.*;
  * 二叉树
  */
 public class BTree {
+
     /**
      * 困难--297. 二叉树的序列化与反序列化
      */
@@ -177,6 +178,8 @@ public class BTree {
      */
     int sum=Integer.MIN_VALUE;//作为遍历的记录变量
     public int maxPathSum(TreeNode root) {
+        if (root == null) return 0;
+        if (root.left == null && root.right == null) return root.val;
         getMaxSum(root);
         return sum;
     }
@@ -198,15 +201,11 @@ public class BTree {
     }
 
     //二刷
-    public int maxPathSum1_2(TreeNode root){
-        if (root == null) return 0;
-        return getMaxSum1_2(root);
-    }
     public int getMaxSum1_2(TreeNode root){
         if (root == null) return 0;
-        int left = Math.max(getMaxSum1_2(root.left),0);
-        int right = Math.max(getMaxSum1_2(root.right),0);
-        sum=Math.max(sum,left+right+root.val);
+        int left=Math.max(getMaxSum1_2(root.left),0);
+        int right=Math.max(getMaxSum1_2(root.right),0);
+        sum= Math.max(sum,root.val+left+right);
         return Math.max(left,right)+root.val;
     }
 
