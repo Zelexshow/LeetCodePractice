@@ -6,6 +6,58 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class Sort {
+    /***
+     * 冒泡排序，时间复杂度O(n^2)，空间复杂度O(1)
+     */
+    public void bubbleSort(int[] arr){
+        int len=arr.length;
+        for (int i=0;i<len-1;i++){//n-1轮
+            for(int j=0;j<len-1-i;j++){
+                if (arr[j]<arr[j+1]){
+                    int tmp=arr[j];
+                    arr[j]=arr[j+1];
+                    arr[j+1]=tmp;
+                }
+            }
+        }
+    }
+
+    /***
+     * 插入排序 时间复杂度O(n^2)，空间复杂度O(1)
+     */
+    public void insertSort(int[] arr){
+        int tmp,j;
+        for (int i=1;i<arr.length;i++){//待插入的元素的索引
+            tmp=arr[i];
+            j=i-1;
+            while(j >= 0 && arr[j]>tmp){//大就继续左移
+                arr[j+1]=arr[j];
+                j--;
+            }
+            arr[j+1]=tmp;
+        }
+    }
+
+    /***
+     * 选择排序 时间复杂度O(n^2)，空间复杂度O(1)
+     */
+    public void selecSort(int[] arr){
+        int min,tmp;
+        int n=arr.length;
+        for (int i=0;i<n-1;i++){//待存放的位置
+            min=i;
+            for (int j=i+1;j<n;j++){//遍历所有位置
+                if(arr[min] > arr[j]){
+                    min=j;
+                }
+            }
+            if (min != i){//交换
+                tmp=arr[i];
+                arr[i]=arr[min];
+                arr[min]=tmp;
+            }
+        }
+    }
     //基本建立在大顶堆上
     public void heapSort(int[] arr){
         if (arr == null || arr.length<=1) return;
@@ -39,6 +91,8 @@ public class Sort {
         }
         arr[parent]=tmp;//将父节点放到末尾
     }
+
+
     /***
      * 计数排序
      */
@@ -70,7 +124,6 @@ public class Sort {
     /***
      * 基于partition的快排
      */
-
     public void quickSortBasePartition(int[] arr,int l,int r){
         if (arr == null || arr.length < 1) return;
         int len=arr.length;//数组的长度
@@ -134,7 +187,8 @@ public class Sort {
     public static void main(String[] args) {
         Sort ins = new Sort();
         int[] array= new int[]{4,4,6,9,2,5,0,10,9,4,6,9,1,0};
-
+        ins.selecSort(array);
+        System.out.println(Arrays.toString(array));
         ins.quickSortBasePartition(array,0,array.length-1);
         System.out.println(Arrays.toString(array));
         /*int[] sortArray=ins.countingSort(array);*/

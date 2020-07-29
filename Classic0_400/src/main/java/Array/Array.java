@@ -1183,6 +1183,97 @@ public class Array {
 
     }
 
+    /***
+     * 中等--55、跳跃游戏
+     */
+    public boolean canJump(int[] A) {
+        //贪心策略为：从右到左遍历数组，找到最左的能够到达终点的位置的元素，最后判断是否能够到达
+        //0索引位置
+        //lastPos标记为最左的能否到达终点的索引（0）
+        int lastPos=A.length-1;
+        for (int i=A.length-1;i>=0;i--){
+            if (i+A[i] >= lastPos) lastPos=i;
+        }
+        return lastPos == 0;
+    }
+
+    /***
+     * 困难--45、跳跃游戏2
+     */
+    public int jump(int[] nums) {
+        int end=0,steps=0,maxPosition=0;
+        for (int i=0;i<nums.length-1;i++){
+            //记录当前位置可以跳到的最远位置，注意是最远位置的下标
+            maxPosition=Math.max(maxPosition,i+nums[i]);
+            //如果遍历到的位置下标到达我们上面标记的最大位置，我们已经跳跃到了最大位置，此时需要更新我们的最大位置，并且步数需要加1
+            if (i == end){
+                end=maxPosition;
+                steps++;
+            }
+        }
+        return steps;
+    }
+
+    /****
+     * 困难--42、接雨水
+     */
+    public int trap(int[] height){
+        int[] max_left=new int[height.length];
+        int[] max_right=new int[height.length];
+        int sum=0;
+        for (int i=1;i<height.length;i++){
+            max_left[i]=max_left[i-1]>height[i-1]?max_left[i-1]:height[i-1];
+        }
+        for (int i=height.length-2;i>=0;i--){
+            max_right[i]=max_right[i+1]>height[i+1]?max_right[i+1]:height[i+1];
+        }
+        for (int i=1;i<height.length-1;i++){
+            int less=Math.min(max_left[i],max_right[i]);
+            if (less>height[i]) sum+=less-height[i];
+        }
+        return sum;
+    }
+
+    /***
+     * 简单--496、下一个更大的元素
+     */
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        Stack<Integer> stack = new Stack<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i=0;i<nums2.length;i++){
+            while (!stack.isEmpty() && nums2[i] > stack.peek()){//维护递增栈（栈顶到栈底）
+                map.put(stack.pop(),nums2[i]);
+            }
+            stack.push(nums2[i]);
+        }
+        while (!stack.isEmpty()){
+            map.put(stack.pop(),-1);
+        }
+        int[] res=new int[nums1.length];
+        for (int i=0;i<nums1.length;i++){
+            res[i]=map.get(nums1[i]);
+        }
+        return res;
+    }
+
+    /***
+     * 中等--503、下一个更大的元素2
+     */
+    public int[] nextGreaterElements(int[] nums) {
+        Stack<Integer> stack = new Stack<>();
+        int[] res=new int[nums.length];
+        Arrays.fill(res,-1);
+        for (int i=0;i<2*nums.length;i++){
+            int num=nums[i%nums.length];
+            while(!stack.isEmpty() && num>nums[stack.peek()]){
+                res[stack.pop()]=num;
+            }
+            if (i<nums.length){
+                stack.push(i);
+            }
+        }
+        return res;
+    }
     public static void main(String[] args) {
         Array ins = new Array();
         ArrayList<ArrayList<Integer>> result = ins.FindContinuousSequence(100);
@@ -1193,5 +1284,9 @@ public class Array {
 
         List<List<Integer>> lists = ins.printList(2);
         System.out.println(lists);
+
+        int[] a1={4,1,2},a2={1,3,4,2};
+        int[] res = ins.nextGreaterElement(a1, a2);
+        System.out.println(Arrays.toString(res));
     }
 }

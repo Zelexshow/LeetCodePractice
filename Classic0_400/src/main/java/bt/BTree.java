@@ -426,6 +426,137 @@ public class BTree {
         return isSameTree(p.left,q.left) && isSameTree(p.right,q.right);
     }
 
+    /***
+     * 前序遍历
+     */
+    public List<Integer> pre(TreeNode root){
+        List<Integer> list = new ArrayList<>();
+        if (root == null) return list;
+        helper(list,root);
+        return list;
+    }
+    public void helper(List<Integer> cur,TreeNode root){
+        if (root == null) return ;
+        cur.add(root.val);
+        helper(cur,root.left);
+        helper(cur,root.right);
+    }
+    //非递归
+    public List<Integer> pre1_2(TreeNode root){
+        List<Integer> res = new ArrayList<>();
+        if (root == null) return res;
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode tmp=null;
+        stack.push(root);
+
+        while(!stack.isEmpty()){
+            tmp = stack.pop();
+            res.add(tmp.val);//插在头部
+            if (tmp.right != null) stack.push(tmp.right);
+            if (tmp.left != null) stack.push(tmp.left);
+        }
+        return res;
+    }
+
+    /***
+     * 中序遍历
+     */
+    public List<Integer> inOrder(TreeNode root){
+        List<Integer> list = new ArrayList<>();
+        if (root == null) return list;
+        helper2(list,root);
+        return list;
+    }
+    public void helper2(List<Integer>cur,TreeNode root){
+        if (root == null) return;
+        helper2(cur,root.left);
+        cur.add(root.val);
+        helper2(cur,root.right);
+    }
+    
+    //非递归
+    public List<Integer> in1_2(TreeNode root){
+        List<Integer> list = new ArrayList<>();
+        if (root == null) return list;
+        Stack<TreeNode> stack = new Stack<>();
+        while(!stack.isEmpty() || root != null){
+            if (root != null){
+                stack.push(root);
+                root=root.left;
+            }else{
+                root=stack.pop();
+                list.add(root.val);
+                root=root.right;
+            }
+        }
+        return list;
+    }
+
+    /***
+     * 后序遍历
+     */
+    public List<Integer> posOrder(TreeNode root){
+        List<Integer> list = new ArrayList<>();
+        if (root == null) return list;
+        helper3(list,root);
+        return list;
+    }
+    public void helper3(List<Integer>cur,TreeNode root){
+        if (root == null) return;
+        helper2(cur,root.left);
+        helper2(cur,root.right);
+        cur.add(root.val);
+    }
+
+    public List<Integer> posOrd1_2(TreeNode root){
+        LinkedList<Integer> res = new LinkedList<>();
+        if (root == null) return res;
+        TreeNode tmp=null;
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while(!stack.isEmpty()){
+            tmp = stack.pop();
+            res.addFirst(tmp.val);
+            if (tmp.left != null) stack.push(tmp.left);
+            if (tmp.right != null) stack.push(tmp.right);
+        }
+        return res;
+    }
+
+    /***
+     * 中等--98、验证二叉搜索树
+     */
+    public boolean isValidBST(TreeNode root) {//非递归版，采用中序遍历,并持有一个变量记录前一个节点的值
+        if(root == null) return true;
+        Stack<TreeNode> stack = new Stack<>();//用于中序遍历
+        TreeNode p=root;
+        TreeNode pre=null;//前驱节点
+        while(p!=null || !stack.isEmpty()){
+            while(p!=null){
+                stack.push(p);
+                p=p.left;
+            }
+            p=stack.pop();
+            if (pre != null && pre.val >= p.val) return false;
+            pre=p;//放一个头指针用于记录前一个节点值
+            p=p.right;
+        }
+        return true;
+    }
+
+    TreeNode pre;
+    boolean isValid=true;
+    public boolean isValidBST1_2(TreeNode root){
+        inOrder1_2(root);
+        return isValid;
+    }
+    public void inOrder1_2(TreeNode root){
+        if (root == null) return;
+        inOrder1_2(root.left);
+        if (pre!= null && pre.val >= root.val) isValid=false;
+        pre=root;
+        inOrder1_2(root.right);
+    }
 }
 class TreeNode {
       int val;
