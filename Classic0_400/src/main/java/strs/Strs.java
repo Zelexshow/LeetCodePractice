@@ -336,23 +336,6 @@ public class Strs {
         return false;
     }
 
-    /***
-     * 困难--316、去重字符串
-     */
-    public int lengthOfLongestSubstring(String s) {
-        if (s.length() == 0) return 0;
-        HashMap<Character, Integer> map = new HashMap<>();
-        int max=0;
-        int left=0;
-        for (int i=0;i<s.length();i++){
-            if (map.containsKey(s.charAt(i))){
-                left=Math.max(left,map.get(s.charAt(i))+1);
-            }
-            map.put(s.charAt(i),i);
-            max = Math.max(max, i - left + 1);
-        }
-        return max;
-    }
 
     /***
      * 剑指offer--左旋字符串
@@ -423,15 +406,15 @@ public class Strs {
         }
         return max;
     }
-    
+
     //二刷
-    public int lengthOfLongestSubstring1_2(String s) {
+    public int lengthOfStrs(String s){
         if (s == null || s.length() == 0) return 0;
-        HashMap<Character, Integer> map = new HashMap<>();
+        Map<Character, Integer> map = new HashMap<>();
         int leftIx=0,max=0;
         for (int i=0;i<s.length();i++){
             if (map.containsKey(s.charAt(i))){
-                leftIx=Math.max(leftIx,map.get(s.charAt(i))+1);//更新左边界
+                leftIx=Math.max(leftIx,map.get(s.charAt(i))+1);
             }
             map.put(s.charAt(i),i);
             max=Math.max(max,i-leftIx+1);
@@ -528,7 +511,6 @@ public class Strs {
         }
         return res;
     }
-
     //二刷
     public String decodeString1_2(String s){
         String res="";
@@ -569,20 +551,76 @@ public class Strs {
         return res;
     }
 
+    /***
+     * 中等--3、最长不含重复字符的子字符串
+     */
+    public int lengthOfLongestSubstring(String s) {
+        if (s == null || s.length() == 0) return 0;
+        Map<Character, Integer> map = new HashMap<>();
+        int leftIx=0,max=0;
+        for (int i=0;i<s.length();i++){
+            if (map.containsKey(s.charAt(i))){
+                leftIx=Math.max(leftIx,map.get(s.charAt(i))+1);//更新左边的位置
+            }
+            map.put(s.charAt(i),i);//更新最新的位置
+            max=Math.max(max,i-leftIx+1);
+        }
+        return max;
+    }
+
+    /***
+     * 中等--93、复原IP地址
+     */
+    public List<String> restoreIpAddresses(String s){
+        int len = s.length();
+        List<String> res = new ArrayList<>();
+        if (len < 4 || len > 12) return res;
+        //用来存储当前的路径
+        Deque<String> path = new ArrayDeque<>(4);
+        int splitTimes=0;
+        dfs(s,len,splitTimes,0,path,res);
+        return res;
+    }
+
+    /**
+     * 判断 s 的子区间 [left, right] 是否能够成为一个 ip 段
+     * 判断的同时顺便把类型转了
+     * */
+    private int judgeIfIpSegment(String s,int left,int right){
+        int len=right-left+1;
+        if (len > 1 && s.charAt(left) == '0') return -1;
+        //转成int类型
+        int res=0;
+        for (int i=left;i<= right;i++){
+            res= res*10 + s.charAt(i) - '0';
+        }
+
+        if (res > 255) return -1;
+        return res;
+    }
+
+    private void dfs(String s, int len, int splitTimes, int begin, Deque<String> path, List<String> res) {
+        if (begin == len){
+            if (splitTimes == 4) res.add(String.join(".",path));
+            return;
+        }
+        //看到剩下的不够了，就退出(剪枝)，len-begin表示剩余的还未分割的字符串的位数
+        if (len - begin < (4-splitTimes) || len - begin >3*(4-splitTimes)) return;
+        for (int i=0;i<3;i++){
+            if (begin + i >= len) break;
+            int ipSegment = judgeIfIpSegment(s,begin,begin+i);
+            if (ipSegment != -1){
+                path.addLast(ipSegment+"");
+                dfs(s,len,splitTimes+1,begin+i+1,path,res);
+                path.removeLast();
+            }
+        }
+    }
+
     public static void main(String[] args) {
+        String s="pwwkew";
+        Strs ins = new Strs();
+        int i = ins.lengthOfLongestSubstring(s);
 
-        Strs strs = new Strs();
-        String test="2[abc]3[cd]ef";
-        String ss = strs.decodeString(test);
-        System.out.println(ss);
-
-        /*String S="ADOBECODEBANC";
-        String T="ABC";
-        String result = strs.minWindow(S, T);
-        System.out.println(result);
-
-        String s="abcdefg";
-        String s1 = strs.LeftRotateString(s, 3);
-        System.out.println(s1);*/
     }
 }

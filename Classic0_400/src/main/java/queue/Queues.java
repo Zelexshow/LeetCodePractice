@@ -2,6 +2,7 @@ package queue;
 
 import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class Queues {
 
@@ -25,7 +26,22 @@ public class Queues {
         }
         return res;
     }
-
+    //二刷
+    public int[] maxSlid2(int[] nums,int k){
+        if (nums.length*k == 0) return new int[0];
+        int[] result=new int[nums.length-k+1];
+        LinkedList<Integer> queue=new LinkedList<>();
+        int ix=0,count=0;
+        while(ix<nums.length){
+            if (!queue.isEmpty() && ix-queue.peek() >= k) queue.pollFirst();//队首
+            while(nums[ix]>nums[queue.peekLast()] && !queue.isEmpty()){
+                queue.pollLast();
+            }
+            queue.addLast(ix);
+            if (ix>= k-1) result[count++]=nums[queue.peek()];//队首始终放置最大的元素
+        }
+        return result;
+    }
     /***
      * 困难--295、数据流的中位数
      */

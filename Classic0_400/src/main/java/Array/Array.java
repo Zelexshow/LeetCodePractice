@@ -1,6 +1,7 @@
 package Array;
 
 import netscape.javascript.JSUtil;
+import sun.java2d.windows.GDIRenderer;
 
 import java.util.*;
 
@@ -661,6 +662,28 @@ public class Array {
         return result;
 
     }
+    //三刷
+    public int findKthLargest1_3(int[] nums,int k){
+        //第一次建立大顶堆
+        int len=nums.length;
+        for(int i=(len-1)/2;i>=0;i--){
+            //从右到左，从下到上
+            heapMax(nums,i,len);
+        }//构建完成后，第一个元素就是最大的元素
+        int result=0;
+
+        for (int i=0;i<k;i++){
+            if (i == k-1){
+                result=nums[0];
+                break;
+            }
+            //交换第一个元素和最后一个元素
+            swap(nums,0,len-1-i);
+            heapMax(nums,0,len-1-i);
+        }
+
+        return result;
+    }
     //从上到下构造大顶堆
     public void heapMax(int[] nums,int start,int end){
         int val=nums[start];
@@ -1274,6 +1297,61 @@ public class Array {
         }
         return res;
     }
+
+    /***
+     * 剑指offer--数组中的逆序对
+     * 利用归并排序的思想
+     */
+    int count;//用于统计
+    public int reversePairs(int[] nums) {
+        count=0;
+        if (nums != null){
+            divPairs(nums,0,nums.length-1);
+        }
+        return count;
+    }
+    public void divPairs(int[] arr,int start,int end){
+        if (start >= end) return;
+        int mid=(start+end)>>1;
+        divPairs(arr,start,mid);
+        divPairs(arr,mid+1,end);
+        mergePairs(arr,start,mid,end);
+    }
+    public void mergePairs(int[] arr,int start,int mid,int end){
+        int i=start,j=mid+1,k=0;
+        int[] tmp=new int[end-start+1];//用来存放新的结果
+        while(i<=mid && j<= end){
+            if (arr[i]<=arr[j]){
+                tmp[k++]=arr[i++];
+            }else{
+                tmp[k++]=arr[j++];
+                count+=mid-i+1;//因为到目前为止，已经将原数组排好序了
+            }
+        }
+        while(i <= mid) tmp[k++]=arr[i++];
+        while(j <= end) tmp[k++]=arr[j++];
+        //将原数组变成有序
+        System.arraycopy(tmp,0,arr,start,end-start+1);
+    }
+
+    /***
+     * 中等--986、区间列表的交集
+     */
+    public int[][] intervalIntersection(int[][] A,int[][] B){
+        List<int[]> ans=new ArrayList<>();
+        int i=0,j=0;
+        while(i<A.length && j<B.length){
+            int low=Math.max(A[i][0],B[j][0]);
+            int high=Math.min(A[i][1],B[j][1]);
+            if (low <= high){
+                ans.add(new int[]{low,high});
+            }
+            if (A[i][1]<B[j][1])
+                i++;
+            else j++;
+        }
+        return ans.toArray(new int[ans.size()][]);
+    }
     public static void main(String[] args) {
         Array ins = new Array();
         ArrayList<ArrayList<Integer>> result = ins.FindContinuousSequence(100);
@@ -1288,5 +1366,6 @@ public class Array {
         int[] a1={4,1,2},a2={1,3,4,2};
         int[] res = ins.nextGreaterElement(a1, a2);
         System.out.println(Arrays.toString(res));
+        Set<Integer> set = new HashSet<>();
     }
 }

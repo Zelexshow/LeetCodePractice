@@ -153,6 +153,16 @@ public class SimpleMath {
         }
         return false;
     }
+    /***
+     * 中等--470、用Rand7()实现Rand10()
+     */
+    public int rand7(){return 0;}//函数无意义，只是防止编译报错
+    public int rand10(){
+        //首先得到一个数
+        int num=(rand7()-1)*7+rand7();
+        while(num>40) num=(rand7()-1)*7+rand7();//大于40就继续采样
+        return 1+num%10;
+    }
 
     /**
      * 简单--374、猜数字大小

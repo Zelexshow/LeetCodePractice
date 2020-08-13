@@ -9,6 +9,33 @@ import java.util.*;
  */
 public class BTree {
 
+    /***
+     * 中等--426、将二叉搜索树转化为排序的双向链表
+     */
+    private TreeNode head=null;
+    private TreeNode tail=null;
+
+    public TreeNode Convert(TreeNode root){
+        visit(root);
+        return head;
+    }
+
+    public void visit(TreeNode root){
+        if (root == null) return;
+        visit(root.left);
+        createList(root);
+        visit(root.right);
+    }
+
+    public void createList(TreeNode cur){
+        cur.left=tail;
+        if (tail != null){
+            tail.right=cur;
+        }else{
+            head=cur;
+        }
+        tail=cur;//更新尾节点为当前节点，或者 尾节点后移
+    }
     /**
      * 困难--297. 二叉树的序列化与反序列化
      */

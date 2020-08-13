@@ -244,30 +244,31 @@ public class LISTTABLE {
 
     /***二刷*/
     public ListNode reverseBetween2(ListNode head,int m,int n){
-        //1、首先找打待翻转段的前一个节点
-        ListNode pre=null,cur=head;//pre表示翻转段的前一个节点，cur表示翻转段的第一个节点
+        if (head == null) return head;
+        //获得链表长度
+        ListNode cur=head,pre=null;
+        //找到起始点
         while(m>1){
             pre=cur;
             cur=cur.next;
             m--;
             n--;
         }
-        //此时pre保持不动，开始反转后面的链表
-        ListNode con=pre,tail=cur,next=null;
-        while(n>0){
-            next=cur.next;
+        ListNode con=pre,tail=cur;
+        ListNode third=null;
+        while(n>0){//开始翻转后面的链表
+            third=cur.next;//记录下一个节点
             cur.next=pre;
             pre=cur;
-            cur=next;
+            cur=third;
             n--;
         }
-        //把pre和头节点连接起来
-        if (con!=null){
+        if (con != null){
             con.next=pre;
         }else{
             head=pre;
         }
-        tail.next=cur;
+        tail.next=cur;//将反转后的节点指向后半部分的节点
         return head;
     }
 

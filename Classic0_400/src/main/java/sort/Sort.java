@@ -62,10 +62,12 @@ public class Sort {
     public void heapSort(int[] arr){
         if (arr == null || arr.length<=1) return;
         int len=arr.length;
+
         for (int i=(len-1)/2;i>=0;i--){
             //从第一个非叶子节点从下至上，从右至左调整结构
             heapify(arr,i,len);
         }
+
         for(int i=len-1;i>0;i--){
             int tmp=arr[0];
             arr[0]=arr[i];
@@ -75,12 +77,12 @@ public class Sort {
         }
     }
 
-    public void heapify(int[] arr,int parent,int len){//len表示的是堆队尾的元素
+    public void heapify(int[] arr,int parent,int end){//len表示的是堆队尾的元素
         int tmp=arr[parent];//保存本节点
         int lchild=parent*2+1;
-        while(lchild<len){
+        while(lchild<end){
             int rchild=lchild+1;
-            if (rchild<len && arr[lchild]<arr[rchild]){
+            if (rchild<end && arr[lchild]<arr[rchild]){
                 lchild++;
             }
             if(tmp>arr[lchild]) break;
@@ -91,7 +93,34 @@ public class Sort {
         }
         arr[parent]=tmp;//将父节点放到末尾
     }
+    public void heapSort1_2(int[] arr){
+        int len=arr.length;
+        for (int i=(len-1)/2;i>=0;i--){
+            heapify(arr,i,len);//从右往左，从下往上构造大顶堆
+        }
+        for (int i=len-1;i>=0;i--){
+            int tmp=arr[0];//堆顶是最大的元素
+            arr[0]=arr[i];//放到边界位置
+            arr[i]=tmp;
+            heapify2(arr,0,i);
+        }
+    }
+    //二刷
+    public void heapify2(int[] arr,int parent,int end){
+        int tmp=arr[parent];//记录父节点
+        int leftChild=parent*2+1;//左子节点
+        while(leftChild<end){
+            if (leftChild+1<end && arr[leftChild]<arr[leftChild+1]){
+                leftChild=leftChild+1;
+            }
+            if (tmp>arr[leftChild]) break;
+            arr[parent]=arr[leftChild];//将子节点的值赋给父节点
 
+            parent=leftChild;
+            leftChild=leftChild*2+1;//向下迭代
+        }
+        arr[parent]=tmp;//将父节点放到末尾
+    }
 
     /***
      * 计数排序
@@ -156,7 +185,7 @@ public class Sort {
     }
 
     /***
-     * 归并排序
+     * 归并排序 时间复杂度O(NlogN) 空间复杂度 O(N)
      */
     public void mergeSort(int[] arr,int l,int r){
         if (l<r){
@@ -187,7 +216,7 @@ public class Sort {
     public static void main(String[] args) {
         Sort ins = new Sort();
         int[] array= new int[]{4,4,6,9,2,5,0,10,9,4,6,9,1,0};
-        ins.selecSort(array);
+        ins.heapSort1_2(array);
         System.out.println(Arrays.toString(array));
         ins.quickSortBasePartition(array,0,array.length-1);
         System.out.println(Arrays.toString(array));

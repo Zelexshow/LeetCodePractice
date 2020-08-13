@@ -280,6 +280,27 @@ public class Stacks {
         return ans;
     }
 
+    public int caculate2_2(String s){
+        Stack<Integer> numStack = new Stack<>();
+        char lastOpt='+';
+        char[] chars = s.toCharArray();
+        for (int i=0;i<chars.length;i++){
+            if (chars[i] == ' ') continue;
+            if (Character.isDigit(chars[i])){
+                int tmp=chars[i]-'0';
+                while(++i<chars.length && Character.isDigit(chars[i])){
+                    tmp=tmp*10+(chars[i]-'0');
+                }
+                i--;
+                if (lastOpt == '+') numStack.push(tmp);
+                else if (lastOpt == '-') numStack.push(-tmp);
+                else numStack.push(res(lastOpt,numStack.pop(),tmp));
+            }else lastOpt=chars[i];
+        }
+        int ans=0;
+        for (int num:numStack) ans+=num;
+        return ans;
+    }
     private int res(char lastOp, int a, int b) {
         if (lastOp == '*') return a*b;
         else if (lastOp == '/') return a/b;
